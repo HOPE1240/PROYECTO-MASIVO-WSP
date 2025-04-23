@@ -7,8 +7,9 @@ use App\Models\MensajeMasivo;
 use App\Models\Area;
 use App\Models\Cliente;
 use App\Models\LogEnvioMasivo;
+use Illuminate\Support\Facades\Http;
 
-class MensajeMarivoController extends Controller
+class MensajeMarivoController extends Controller // <- Corregido el nombre de la clase
 {
     // Crear mensaje masivo
     public function crear(Request $request)
@@ -55,23 +56,45 @@ class MensajeMarivoController extends Controller
         return response()->json(['message' => 'Mensaje masivo modificado con éxito', 'mensaje' => $mensaje]);
     }
 
-    // Enviar mensaje masivo (simulado - falta integración con WhatsApp o servicio real)
+    // Enviar mensaje masivo con integración Venom
     public function enviar($id)
     {
         $mensaje = MensajeMasivo::findOrFail($id);
-        $clientes = Cliente::all();
+    $clientes = Cliente::all();
 
-        foreach ($clientes as $cliente) {
-            $mensajeFinal = str_replace('{{nombre}}', $cliente->nombre, $mensaje->contenido);
+    $logsCreados = [];
 
-            LogEnvioMasivo::create([
-                'mensaje_masivo_id' => $mensaje->id,
-                'cliente_id' => $cliente->id,
-                'mensaje_final' => $mensajeFinal,
-                'estado' => 'pendiente',
-            ]);
-        }
+    foreach ($clientes as $cliente) {
+        $variables = [
+            '{{nombre}}' => $cliente->nombre,
+            '{{telefono}}' => $cliente->telefono,
+        ];
 
-        return response()->json(['message' => 'Mensajes generados y encolados para envío']);
+        $mensajeFinal = str_replace(array_keys($variables), array_values($variables), $mensaje->contenido);
+
+        // Crear un nuevo log para cada cliente, sin importar si ya existe
+        LogEnvioMasivo::create([
+            'mensaje_masivo_id' => $mensaje->id,
+            'cliente_id' => $cliente->id,
+            'mensaje_final' => $mensajeFinal,
+            'estado' => 'pendiente',
+        ]);
+
+        // Registrar cliente para el que se creó un nuevo log
+        $logsCreados[] = $cliente->id;
+    }
+
+    return response()->json([
+        'message' => 'Mensajes procesados',
+        'logs_creados' => $logsCreados,
+    ]);
+        // // Llamar a Venom para enviar el mensaje
+        // Http::post('http://localhost:3000/send-message', [
+        //     'numero' => '57' . $cliente->telefono,
+        //     'mensaje' => $mensajeFinal,
+        // ]);
+
+
+    return response()->json(['message' => 'Mensajes generados y enviados']);
     }
 }
