@@ -1,129 +1,61 @@
 📢 Sistema de Envío Masivo de Mensajes por WhatsApp
-
 🔖 Descripción General
-
 Este proyecto es un sistema de gestión y envío masivo de mensajes por WhatsApp, desarrollado como una herramienta de comunicación interna o externa para organizaciones que necesitan notificar a muchos clientes o usuarios al mismo tiempo. El sistema está diseñado para permitir la personalización de mensajes, controlar qué área los envía y registrar todos los envíos para seguimiento y auditoría.
 
 ✅ Objetivo del Proyecto
-
 El objetivo principal es automatizar y facilitar el proceso de comunicación con clientes o usuarios a través de WhatsApp, garantizando:
 
 Mensajes personalizados por cliente mediante variables.
-
 Control de mensajes por área funcional (ej. Soporte, Finanzas, RRHH).
-
 Registro de logs detallados por cada envío (cliente, contenido, estado).
-
 Integración simple con una API de WhatsApp (Venom Bot).
-
 🌐 Tecnologías Utilizadas
-
-Tecnología
-
-Propósito
-
-Laravel
-
-Framework PHP para la construcción de la API REST.
-
-MySQL
-
-Base de datos para almacenar mensajes, áreas, clientes y logs.
-
-Venom Bot
-
-Cliente de WhatsApp que se conecta a través de Node.js.
-
-HTTP Client
-
-Para enviar peticiones desde Laravel a Venom Bot.
-
-Postman
-
-Herramienta recomendada para probar los endpoints.
-
+Tecnología	Propósito
+Laravel	Framework PHP para la construcción de la API REST.
+MySQL	Base de datos para almacenar mensajes, áreas, clientes y logs.
+Venom Bot	Cliente de WhatsApp que se conecta a través de Node.js.
+HTTP Client	Para enviar peticiones desde Laravel a Venom Bot.
+Postman	Herramienta recomendada para probar los endpoints.
 📊 Estructura de la Base de Datos
-
 ✉️ Tabla mensajes_masivos
-
 id
-
 titulo
-
 contenido
-
 area_id (FK a tabla areas)
-
 variables (json)
-
 ruta_imagen
-
 estado (borrador / enviado)
-
 created_at, updated_at
-
 👥 Tabla clientes
-
 id
-
 nombre
-
 telefono
-
 created_at, updated_at
-
 ⚖️ Tabla areas
-
 id
-
 nombre
-
 created_at, updated_at
-
 ✏️ Tabla logs_envios_masivos
-
 id
-
 mensaje_masivo_id (FK a mensajes)
-
 cliente_id (FK a clientes)
-
 mensaje_final
-
 estado (pendiente / enviado / error)
-
 created_at, updated_at
-
-🛠️ Instalación del Backend (Laravel)
-
+🛠️ Instalación
 Clonar el repositorio:
-
 git clone https://github.com/tu-usuario/whatsapp-masivo.git
-
 Instalar dependencias:
-
-cd whatsapp-masivo/laravel-backend
 composer install
-
 Configurar el archivo .env con tu base de datos y URL de Venom:
-
 DB_DATABASE=whatsapp
-DB_USERNAME=root
-DB_PASSWORD=
 VENOM_URL=http://localhost:3000/send-message
-
 Ejecutar migraciones:
-
 php artisan migrate
-
 Iniciar el servidor:
-
 php artisan serve
-
 🌐 API REST: Endpoints Disponibles
-
 1. Crear mensaje masivo
-
 POST /mensajes/crear
 
 Request JSON:
@@ -138,16 +70,13 @@ Request JSON:
   },
   "ruta_imagen": "https://example.com/imagen.jpg"
 }
-
 Respuesta: 201 Created
 
 {
   "message": "Mensaje masivo creado con éxito",
   "mensaje": { ...datos del mensaje... }
 }
-
 2. Modificar mensaje masivo
-
 PUT /mensajes/{id}/modificar
 
 Request JSON:
@@ -161,9 +90,7 @@ Request JSON:
   },
   "ruta_imagen": null
 }
-
 3. Enviar mensaje masivo
-
 POST /mensajes/{id}/enviar
 
 Este endpoint recorre la lista de clientes, reemplaza las variables y envía el mensaje usando Venom Bot.
@@ -173,69 +100,30 @@ Respuesta:
 {
   "message": "Mensajes generados y enviados"
 }
-
-🔄 Lógica de Envío (Backend Laravel)
-
+🔄 Lógica de Envio (Backend Laravel)
 Recupera el mensaje y sus variables.
-
 Recorre todos los clientes.
-
 Reemplaza las variables del mensaje con datos del cliente.
-
 Envía el mensaje personalizado usando una petición HTTP a Venom Bot.
-
 Guarda un log por cada cliente.
+🔗 Integración con Venom Bot
+Venom debe estar corriendo en http://localhost:3000/send-message y tener una sesión activa de WhatsApp escaneada.
 
-📦 Instalación y Configuración
-
-Entrar a la carpeta:
-
-cd whatsapp-masivo/venom-bot
-
-Instalar dependencias:
-
-npm install
-
-Ejecutar el bot:
-
-node index.js
-
-En la primera ejecución, escanear el QR que aparece para iniciar sesión en WhatsApp.
-
-📥 Endpoint HTTP del Bot
-
-El bot escucha en http://localhost:3000/send-message y espera un JSON:
+Petición HTTP a Venom:
 
 {
   "numero": "573001112233",
   "mensaje": "Hola Carlos, recuerda que tu reunión es el 10 de mayo."
 }
-
-Respuesta esperada:
-
-{
-  "status": "success",
-  "message": "Mensaje enviado"
-}
-
 ⚠️ Consideraciones
-
 Los mensajes solo se pueden modificar antes de ser enviados.
-
 Las variables deben estar declaradas dentro del contenido con el formato {{nombre_variable}}.
-
-Venom debe tener una sesión activa en el dispositivo móvil conectado.
-
+Se recomienda validar que el servidor de Venom esté activo antes de enviar.
 📚 Futuras Mejoras
-
 Panel administrativo para gestión visual de mensajes, áreas y envíos.
-
 Visualización de logs por cliente y estado de entrega.
-
 Soporte para adjuntar archivos o botones.
-
-Notificaciones de errores de envío.
-
+Desarrollado con Laravel y Venom para una comunicación efectiva y automatizada por WhatsApp.
 
 
 Desarrollado con Laravel y Venom Bot para una comunicación efectiva y automatizada por WhatsApp.
