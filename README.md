@@ -1,3 +1,5 @@
+# 📢 Sistema de Envío Masivo de Mensajes por WhatsApp
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
@@ -7,60 +9,193 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🔖 Descripción General
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Este proyecto es un **sistema de gestión y envío masivo de mensajes por WhatsApp**, desarrollado como una herramienta de comunicación interna o externa para organizaciones que necesitan notificar a muchos clientes o usuarios al mismo tiempo.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Combina **Laravel** (backend en PHP) con **Venom Bot** (cliente de WhatsApp en Node.js) para proporcionar una solución robusta, automatizada y flexible.
 
-## Learning Laravel
+![diagrama](https://github.com/user-attachments/assets/49480ed8-4f76-46f7-8d25-b176832a4e5c)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## ✅ Objetivo del Proyecto
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Automatizar y facilitar el proceso de comunicación con clientes o usuarios a través de WhatsApp, garantizando:
 
-## Laravel Sponsors
+* Mensajes personalizados mediante variables dinámicas.
+* Control y autorización de envío desde distintas áreas.
+* Registro detallado de cada envío en la base de datos.
+* Independencia entre el backend y el cliente de WhatsApp (acoplados vía API).
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+## 🌐 Tecnologías Utilizadas
 
-### Premium Partners
+| Tecnología      | Propósito                                                  |
+| --------------- | ---------------------------------------------------------- |
+| **Laravel**     | Framework PHP para la API REST.                            |
+| **MySQL**       | Base de datos para almacenar la información.               |
+| **Venom Bot**   | Cliente de WhatsApp para automatizar el envío de mensajes. |
+| **Node.js**     | Motor de ejecución para Venom Bot.                         |
+| **HTTP Client** | Comunicación entre Laravel y Venom.                        |
+| **Postman**     | Pruebas y validación de la API.                            |
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+## 📊 Estructura de la Base de Datos
 
-## Contributing
+### 🧾 Tabla `mensajes_masivos`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+* `id`
+* `titulo`
+* `contenido`
+* `area_id`
+* `variables`
+* `ruta_imagen`
+* `estado`
+* `created_at`, `updated_at`
 
-## Code of Conduct
+### 👥 Tabla `clientes`
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+* `id`
+* `nombre`
+* `telefono`
+* `created_at`, `updated_at`
 
-## Security Vulnerabilities
+### 🏢 Tabla `areas`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+* `id`
+* `nombre`
+* `created_at`, `updated_at`
 
-## License
+### 🧾 Tabla `logs_envios_masivos`
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+* `id`
+* `mensaje_masivo_id`
+* `cliente_id`
+* `mensaje_final`
+* `estado`
+* `created_at`, `updated_at`
+
+## 🛠️ Instalación y Configuración
+
+### Backend (Laravel)
+
+```bash
+git clone https://github.com/tu-usuario/whatsapp-masivo.git
+cd whatsapp-masivo/laravel-backend
+composer install
+cp .env.example .env
+php artisan key:generate
+```
+
+Editar `.env`:
+
+```env
+DB_DATABASE=whatsapp
+DB_USERNAME=root
+DB_PASSWORD=
+VENOM_URL=http://localhost:3000/send-message
+```
+
+```bash
+php artisan migrate
+php artisan serve
+```
+
+### Cliente WhatsApp (Venom Bot)
+
+```bash
+cd whatsapp-masivo/venom-bot
+npm install
+node index.js
+```
+
+Escanea el QR con tu teléfono. Venom iniciará la sesión de WhatsApp.
+
+## 📥 API del Backend Laravel
+
+### Crear mensaje masivo
+
+`POST /mensajes/crear`
+
+```json
+{
+  "titulo": "Recordatorio",
+  "contenido": "Hola {{nombre}}, tu cita es el {{fecha}}.",
+  "area_id": 1,
+  "variables": { "nombre": "Carlos", "fecha": "10 de mayo" },
+  "ruta_imagen": "https://example.com/img.jpg"
+}
+```
+
+### Modificar mensaje
+
+`PUT /mensajes/{id}/modificar`
+
+```json
+{
+  "titulo": "Nuevo recordatorio",
+  "contenido": "Hola {{nombre}}, reprogramamos para el {{fecha}}.",
+  "variables": { "nombre": "Ana", "fecha": "12 de mayo" },
+  "ruta_imagen": null
+}
+```
+
+### Enviar mensaje masivo
+
+`POST /mensajes/{id}/enviar`
+
+```json
+{
+  "message": "Mensajes generados y enviados"
+}
+```
+
+## 📤 API de Venom Bot (Node.js)
+
+Ruta: `http://localhost:3000/send-message`
+
+```json
+{
+  "numero": "573001112233",
+  "mensaje": "Hola Carlos, tu cita es el 10 de mayo."
+}
+```
+
+Respuesta esperada:
+
+```json
+{
+  "status": "success",
+  "message": "Mensaje enviado"
+}
+```
+
+## 🔁 Flujo de Envío de Mensajes
+
+1. Usuario crea el mensaje desde Laravel.
+2. Se valida contenido y variables.
+3. El sistema reemplaza las variables por datos de cada cliente.
+4. Envía individualmente a través de Venom Bot.
+5. Guarda logs con resultados de cada envío.
+
+## ⚠️ Posibles Errores y Cómo Evitarlos
+
+* ❌ No tener Venom activo → ✅ Ejecutar `node index.js` y escanear el QR.
+* ❌ No declarar variables en contenido → ✅ Usar `{{variable}}`.
+* ❌ Teléfonos sin código país → ✅ Usar formato internacional (ej. `573001112233`).
+* ❌ No coincidir `area_id` válido → ✅ Validar contra la tabla `areas`.
+
+## 🧩 Complemento entre Laravel y Venom
+
+Laravel maneja la lógica, validaciones, clientes y mensajes. Venom ejecuta el envío real mediante una sesión activa de WhatsApp Web, totalmente desacoplada. Laravel actúa como "cerebro", y Venom como "brazo ejecutor".
+
+## 📚 Futuras Mejoras
+
+* Panel gráfico para usuarios no técnicos.
+* Soporte para plantillas predefinidas.
+* Indicador visual de entrega / lectura.
+* Gestión de contactos directamente desde interfaz.
+
+---
+
+*Desarrollado con ❤️ usando Laravel y Venom Bot para potenciar la comunicación automatizada vía WhatsApp.*
