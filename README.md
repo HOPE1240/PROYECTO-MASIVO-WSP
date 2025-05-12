@@ -164,15 +164,6 @@ Este endpoint recorre la lista de clientes, reemplaza las variables y envía el 
 * Envía el mensaje personalizado usando una petición HTTP a Venom Bot.
 * Guarda un log por cada cliente.
 
-## 🤖 Cliente WhatsApp con Venom Bot (Node.js)
-
-### 📁 Estructura del Directori)
-
-### 📁
-
-```
-```
-
 ### 📦 Instalación y Configuración
 
 1. Entrar a la carpeta:
