@@ -1,0 +1,49 @@
+# === General ===
+.DS_Store
+Thumbs.db
+
+# === Laravel (laravel-backend) ===
+/laravel-backend/vendor/
+/laravel-backend/node_modules/
+/laravel-backend/.env
+/laravel-backend/.env.*
+/laravel-backend/storage/*.key
+/laravel-backend/storage/app/public/*
+!/laravel-backend/storage/.gitignore
+/laravel-backend/storage/debugbar/*
+/laravel-backend/bootstrap/cache/*
+/laravel-backend/public/storage
+
+# Laravel log and cache
+/laravel-backend/storage/logs/*
+/laravel-backend/storage/framework/cache/data/*
+/laravel-backend/storage/framework/sessions/*
+/laravel-backend/storage/framework/views/*
+
+# Laravel test files
+/laravel-backend/phpunit.xml
+/laravel-backend/.phpunit.result.cache
+
+# === Node.js (venom-bot) ===
+/venom-bot/node_modules/
+/venom-bot/package-lock.json
+/venom-bot/session/*
+
+# Venom-specific files (cambios temporales y sesiones)
+/venom-bot/tokens/
+/venom-bot/chats/
+/venom-bot/multidevice_session/
+*.log
+
+# === IDEs and editors ===
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# === OS generated ===
+*.swp
+*.bak
+*.tmp
+*.orig
+*.old
