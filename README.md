@@ -17,7 +17,8 @@ Este proyecto es un **sistema de gestión y envío masivo de mensajes por WhatsA
 
 Combina **Laravel** (backend en PHP) con **Venom Bot** (cliente de WhatsApp en Node.js) para proporcionar una solución robusta, automatizada y flexible.
 
-![Diagrama del flujo](./A_flowchart_diagram_depicts_an_integration_between.png)
+![diagrama](https://github.com/user-attachments/assets/49480ed8-4f76-46f7-8d25-b176832a4e5c)
+
 
 ## ✅ Objetivo del Proyecto
 
