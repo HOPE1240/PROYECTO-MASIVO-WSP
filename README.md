@@ -80,7 +80,7 @@ Automatizar y facilitar el proceso de comunicación con clientes o usuarios a tr
 ### Backend (Laravel)
 
 ```bash
-git clone https://github.com/tu-usuario/whatsapp-masivo.git
+git clone https://github.com/HOPE1240/PROYECTO-MASIVO-WSP.git
 cd whatsapp-masivo/laravel-backend
 composer install
 cp .env.example .env
