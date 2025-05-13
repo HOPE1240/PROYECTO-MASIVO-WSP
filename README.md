@@ -170,6 +170,32 @@ Respuesta esperada:
 }
 ```
 
+## Uso con Postman
+
+Para facilitar las pruebas de los endpoints de esta API, puedes utilizar la siguiente colección de Postman que incluye todas las rutas necesarias para la gestión y envío de mensajes masivos por WhatsApp.
+
+## Descargar colección
+
+whatsapp-masivo-postman-collection.json
+
+| Metodo              | Ruta                                                           | Descripcion  |
+| ---------------     | -------------------------------------------------------------- |------------- |
+|  **POST**           | Framework PHP para la API REST.                                |              |
+|  **PUT**            | Base de datos para almacenar la información.                   |              |
+|  **POST**           | Cliente de WhatsApp para automatizar el envío de mensajes.     |              |
+
+## Instrucciones para usar en Postman
+
+1. Abre la aplicación Postman.
+2. Haz clic en el botón Import.
+3. Selecciona el archivo whatsapp-masivo-postman-collection.json que descargaste.
+4. Una vez importado, verás la colección "WhatsApp Masivo" en la barra lateral.
+5. Actualiza los parámetros del entorno si es necesario (como localhost, tokens, etc).
+
+**Asegúrate de que tanto el backend Laravel como el servidor de Venom Bot estén ejecutándose para que las pruebas funcionen correctamente.**
+
+
+
 ## 🔁 Flujo de Envío de Mensajes
 
 1. Usuario crea el mensaje desde Laravel.
