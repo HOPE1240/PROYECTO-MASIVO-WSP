@@ -1,0 +1,13 @@
+2025/05/13-14:40:21.291 2438 Reusing MANIFEST C:\Users\ACRECER\Desktop\HIBRIDO\HIBRIDO\venom-bot\tokens\session-name\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/05/13-14:40:21.292 2438 Recovering log #47
+2025/05/13-14:40:21.300 2438 Reusing old log C:\Users\ACRECER\Desktop\HIBRIDO\HIBRIDO\venom-bot\tokens\session-name\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/000047.log 
+2025/05/13-14:40:30.269 5ac Level-0 table #53: started
+2025/05/13-14:40:30.277 5ac Level-0 table #53: 215738 bytes OK
+2025/05/13-14:40:30.278 5ac Delete type=0 #47
+2025/05/13-14:40:30.279 2438 Manual compaction at level-0 from '\x00\x1c\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x1d\x00\x00\x00' @ 0 : 0; will stop at (end)
+2025/05/13-14:40:31.811 2480 Compacting 1@1 + 1@2 files
+2025/05/13-14:40:31.853 2480 Generated table #54@1: 39946 keys, 1555860 bytes
+2025/05/13-14:40:31.853 2480 Compacted 1@1 + 1@2 files => 1555860 bytes
+2025/05/13-14:40:31.853 2480 compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/05/13-14:40:31.854 2480 Delete type=2 #50
+2025/05/13-14:40:31.854 2480 Delete type=2 #53
