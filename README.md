@@ -103,6 +103,8 @@ php artisan serve
 
 ### Cliente WhatsApp (Venom Bot)
 
+En este apartado se debe tener en cuenta que se debe acceder primeramente desde consola a la carpeta para que esta pueda ejecutarse correctamente
+
 ```bash
 cd whatsapp-masivo/venom-bot
 npm install
@@ -146,7 +148,7 @@ Escanea el QR con tu teléfono. Venom iniciará la sesión de WhatsApp.
 
 ```json
 {
-  "message": "Mensajes generados y enviados"
+    "cliente_ids": [21, 22]
 }
 ```
 
@@ -224,4 +226,4 @@ Laravel maneja la lógica, validaciones, clientes y mensajes. Venom ejecuta el e
 
 ---
 
-*Desarrollado con ❤️ usando Laravel y Venom Bot para potenciar la comunicación automatizada vía WhatsApp.*
+*Desarrollado con ❤️ usando Laravel y Venom Bot para potenciar la comunicación automatizada vía WhatsApp.* D0Ct0RW4114C3
