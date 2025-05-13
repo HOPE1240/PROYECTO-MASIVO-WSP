@@ -178,11 +178,11 @@ Para facilitar las pruebas de los endpoints de esta API, puedes utilizar la sigu
 
 whatsapp-masivo-postman-collection.json
 
-| Metodo              | Ruta                                                           | Descripcion  |
-| ---------------     | -------------------------------------------------------------- |------------- |
-|  **POST**           | Framework PHP para la API REST.                                |              |
-|  **PUT**            | Base de datos para almacenar la información.                   |              |
-|  **POST**           | Cliente de WhatsApp para automatizar el envío de mensajes.     |              |
+| Metodo              | Ruta                                                           | Descripcion                          |
+| ---------------     | -------------------------------------------------------------- |------------------------------------- |
+|  **POST**           | Framework PHP para la API REST.                                |  Crear nuevo mensaje masivo          |
+|  **PUT**            | Base de datos para almacenar la información.                   |  Modificar mensaje existente         |
+|  **POST**           | Cliente de WhatsApp para automatizar el envío de mensajes.     |  Enviar mensaje a todos los clientes |
 
 ## Instrucciones para usar en Postman
 
