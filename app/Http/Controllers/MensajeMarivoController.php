@@ -19,7 +19,7 @@ class MensajeMarivoController extends Controller
             'contenido' => 'required|string',
             'area_id' => 'required|integer|exists:areas,id',
             'variables' => 'nullable|array',
-            'ruta_imagen' => 'nullable|url',
+            'ruta_imagen' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -47,6 +47,7 @@ class MensajeMarivoController extends Controller
     // Enviar mensaje masivo
     public function enviar($id, Request $request)
     {
+        set_time_limit(300);
         $mensaje = MensajeMasivo::findOrFail($id);
 
         $clienteId = $request->input('cliente_id');
@@ -74,11 +75,19 @@ class MensajeMarivoController extends Controller
                 continue;
             }
 
+            // Reemplazo de variables dinámicas, NO incluyas {{imagen}} en el contenido si no quieres la URL como texto
+            $variables = [
+                '{{nombre}}' => $cliente->nombre,
+                '{{telefono}}' => $cliente->telefono,
+            ];
+
             $mensajeFinal = str_replace(
-                ['{{nombre}}', '{{telefono}}'],
-                [$cliente->nombre, $cliente->telefono],
+                array_keys($variables),
+                array_values($variables),
                 $mensaje->contenido
             );
+
+            $tituloFinal = $mensaje->titulo;
 
             $log = LogEnvioMasivo::create([
                 'mensaje_masivo_id' => $mensaje->id,
@@ -90,25 +99,29 @@ class MensajeMarivoController extends Controller
             $logsCreados[] = $log->id;
 
             try {
-                $response = Http::post('http://localhost:3000/send-message', [
+                // Enviar título, contenido y la imagen si existe
+                $payload = [
                     'numero' => '57' . $cliente->telefono,
+                    'titulo' => $tituloFinal,
                     'mensaje' => $mensajeFinal,
-                ]);
+                ];
 
-                if ($response->successful() && $response->json('success')) {
-                    $log->estado = 'enviado';
-                } else {
-                    $log->estado = 'error';
-                    $log->error = $response->body();
+                if ($mensaje->ruta_imagen) {
+                    $payload['imagen'] = $mensaje->ruta_imagen;
                 }
 
+                \Log::info('Payload enviado a Venom:', $payload);
+
+                $response = Http::timeout(1200)->post('http://localhost:3000/send-message', $payload);
+
+                $log->estado = 'enviado';
                 $log->save();
 
                 $resultados[] = [
                     'cliente_id' => $cliente->id,
                     'numero' => '57' . $cliente->telefono,
                     'status' => $log->estado,
-                    'error' => $log->estado === 'error' ? $log->error : null,
+                    'error' => null,
                 ];
             } catch (\Exception $e) {
                 $log->estado = 'error';

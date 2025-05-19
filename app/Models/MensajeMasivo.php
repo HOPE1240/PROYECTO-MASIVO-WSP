@@ -33,4 +33,9 @@ class MensajeMasivo extends Model // Cambiado a MensajeMasivo
     {
         return $this->hasMany(LogEnvioMasivo::class, 'mensaje_masivo_id');
     }
+
+    public function imagenes()
+{
+    return $this->hasMany(\App\Models\ImagenMensajeMasivo::class, 'mensaje_masivo_id');
+}
 }
