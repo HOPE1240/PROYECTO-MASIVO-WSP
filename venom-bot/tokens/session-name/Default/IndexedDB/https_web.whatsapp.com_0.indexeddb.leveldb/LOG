@@ -1,15 +1,13 @@
-2025/05/19-17:20:10.299 3814 Reusing MANIFEST C:\Users\ACRECER\Desktop\HIBRIDO\HIBRIDO\venom-bot\tokens\session-name\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
-2025/05/19-17:20:10.299 3814 Recovering log #73
-2025/05/19-17:20:10.314 3814 Reusing old log C:\Users\ACRECER\Desktop\HIBRIDO\HIBRIDO\venom-bot\tokens\session-name\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/000073.log 
-2025/05/19-17:20:10.314 3814 Delete type=2 #72
-2025/05/19-17:20:10.314 3814 Delete type=2 #74
-2025/05/19-17:20:19.355 3814 Level-0 table #78: started
-2025/05/19-17:20:19.371 3814 Level-0 table #78: 461199 bytes OK
-2025/05/19-17:20:19.373 3814 Delete type=0 #73
-2025/05/19-17:20:19.375 3814 Manual compaction at level-0 from '\x00!\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00"\x00\x00\x00' @ 0 : 0; will stop at (end)
-2025/05/19-17:20:21.527 3814 Compacting 1@1 + 1@2 files
-2025/05/19-17:20:21.602 3814 Generated table #79@1: 59074 keys, 1879233 bytes
-2025/05/19-17:20:21.602 3814 Compacted 1@1 + 1@2 files => 1879233 bytes
-2025/05/19-17:20:21.603 3814 compacted to: files[ 0 0 1 0 0 0 0 ]
-2025/05/19-17:20:21.605 3814 Delete type=2 #75
-2025/05/19-17:20:21.605 3814 Delete type=2 #78
+2025/05/22-16:59:56.620 954 Reusing MANIFEST C:\Users\ACRECER\Desktop\HIBRIDO\HIBRIDO\venom-bot\tokens\session-name\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/05/22-16:59:56.621 954 Recovering log #95
+2025/05/22-16:59:56.635 954 Reusing old log C:\Users\ACRECER\Desktop\HIBRIDO\HIBRIDO\venom-bot\tokens\session-name\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/000095.log 
+2025/05/22-16:59:58.413 954 Level-0 table #100: started
+2025/05/22-16:59:58.421 954 Level-0 table #100: 250984 bytes OK
+2025/05/22-16:59:58.422 954 Delete type=0 #95
+2025/05/22-16:59:58.423 954 Manual compaction at level-0 from '\x00&\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00'\x00\x00\x00' @ 0 : 0; will stop at (end)
+2025/05/22-16:59:59.859 15ec Compacting 1@1 + 1@2 files
+2025/05/22-16:59:59.958 15ec Generated table #101@1: 71402 keys, 2187846 bytes
+2025/05/22-16:59:59.958 15ec Compacted 1@1 + 1@2 files => 2187846 bytes
+2025/05/22-16:59:59.959 15ec compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/05/22-16:59:59.960 15ec Delete type=2 #97
+2025/05/22-16:59:59.960 15ec Delete type=2 #100

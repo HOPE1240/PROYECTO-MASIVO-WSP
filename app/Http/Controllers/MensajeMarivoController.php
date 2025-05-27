@@ -47,7 +47,7 @@ class MensajeMarivoController extends Controller
     // Enviar mensaje masivo
     public function enviar($id, Request $request)
     {
-        set_time_limit(300);
+        set_time_limit(0); // Desactivar el límite de tiempo de ejecución
         $mensaje = MensajeMasivo::findOrFail($id);
 
         $clienteId = $request->input('cliente_id');
@@ -61,10 +61,13 @@ class MensajeMarivoController extends Controller
             $clientes = Cliente::all();
         }
 
+        // Mezclar aleatoriamente el orden de los clientes para simular comportamiento humano
+        $clientes = $clientes->shuffle();
+
         $logsCreados = [];
         $resultados = [];
 
-        foreach ($clientes as $cliente) {
+        foreach ($clientes as $index => $cliente) {
             if (empty($cliente->telefono)) {
                 $resultados[] = [
                     'cliente_id' => $cliente->id,
@@ -75,7 +78,7 @@ class MensajeMarivoController extends Controller
                 continue;
             }
 
-            // Reemplazo de variables dinámicas, NO incluyas {{imagen}} en el contenido si no quieres la URL como texto
+            // Reemplazo de variables dinámicas
             $variables = [
                 '{{nombre}}' => $cliente->nombre,
                 '{{telefono}}' => $cliente->telefono,
@@ -99,7 +102,6 @@ class MensajeMarivoController extends Controller
             $logsCreados[] = $log->id;
 
             try {
-                // Enviar título, contenido y la imagen si existe
                 $payload = [
                     'numero' => '57' . $cliente->telefono,
                     'titulo' => $tituloFinal,
@@ -112,7 +114,7 @@ class MensajeMarivoController extends Controller
 
                 \Log::info('Payload enviado a Venom:', $payload);
 
-                $response = Http::timeout(1200)->post('http://localhost:3000/send-message', $payload);
+                $response = Http::timeout(21600)->post('http://localhost:3000/send-message', $payload);
 
                 $log->estado = 'enviado';
                 $log->save();
@@ -134,6 +136,13 @@ class MensajeMarivoController extends Controller
                     'status' => 'error',
                     'error' => $e->getMessage(),
                 ];
+            }
+
+            // Delay aleatorio entre 55 y 130 segundos después de cada envío, excepto el último
+            if ($index < count($clientes) - 1) {
+                $delay = rand(55, 130);
+                \Log::info("Esperando {$delay} segundos antes de enviar el siguiente mensaje...");
+                sleep($delay);
             }
         }
 
