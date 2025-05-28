@@ -4,14 +4,11 @@ const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 const app = express();
-app.use(express.json());
+
+app.use(express.json({ limit: '20mb' }));
 
 let clientVenom = null;
-
-// Configuración: máximo de números por solicitud
-const MAX_NUMEROS = 10;
-
-// Validación de número simple
+const MAX_NUMEROS = 2000;
 const isValidNumber = num => /^\d{10,13}$/.test(num);
 
 venom
@@ -50,7 +47,6 @@ venom
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const DELAY_MS = 7000;
 
-// Descarga una imagen remota a un archivo temporal
 async function downloadImage(url, outputPath) {
   const writer = fs.createWriteStream(outputPath);
   const response = await axios({
@@ -79,10 +75,8 @@ app.post('/send-message', async (req, res) => {
   }, 120000);
 
   try {
-    // Ajuste para la nueva BD: solo acepta array "clientes" con los campos esperados
     let clientes = req.body.clientes;
     if (!clientes && req.body.numero && req.body.mensaje) {
-      // Compatibilidad: si viene un solo objeto, lo convierte en array
       clientes = [req.body];
     }
 
@@ -103,8 +97,6 @@ app.post('/send-message', async (req, res) => {
     const resultados = [];
 
     for (const cliente of clientes) {
-      // Ajuste: los campos deben coincidir con la estructura de la BD y el backend Laravel
-      // cliente: { numero, mensaje, titulo, imagen }
       const { numero, mensaje, titulo, imagen } = cliente;
 
       if (!numero || !isValidNumber(numero) || !mensaje) {
@@ -125,11 +117,10 @@ app.post('/send-message', async (req, res) => {
         console.log(`Enviando a: ${numero}, Imagen: ${imagen ? imagen : 'No hay imagen'}, Título: ${titulo ? titulo : 'No hay título'}`);
 
         if (imagen) {
-          // Descargar imagen y enviar como archivo local
           const tempPath = path.join(__dirname, 'temp_img_' + Date.now() + '.jpg');
           await downloadImage(imagen, tempPath);
           await clientVenom.sendImage(`${numero}@c.us`, tempPath, 'imagen.jpg', mensajeAEnviar);
-          fs.unlinkSync(tempPath); // Borra el archivo temporal
+          fs.unlinkSync(tempPath);
           resultados.push({ numero, status: 'enviado con imagen', imagen });
         } else {
           await clientVenom.sendText(`${numero}@c.us`, mensajeAEnviar);

@@ -8,6 +8,7 @@ use App\Models\Cliente;
 use App\Models\LogEnvioMasivo;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class MensajeMarivoController extends Controller
 {
@@ -44,28 +45,43 @@ class MensajeMarivoController extends Controller
         ], 201);
     }
 
-    // Enviar mensaje masivo
+    // Enviar mensaje masivo uno a uno con delay y validación de hora
     public function enviar($id, Request $request)
     {
         set_time_limit(300);
         $mensaje = MensajeMasivo::findOrFail($id);
 
+        // Hora límite: cámbiala según tu necesidad y zona horaria
+        $horaLimite = Carbon::createFromTime(16, 58, 0, 'America/Bogota');
+
         $clienteId = $request->input('cliente_id');
         $clienteIds = $request->input('cliente_ids');
 
+        // Solo procesa si se envía cliente_id o cliente_ids
         if ($clienteIds) {
             $clientes = Cliente::whereIn('id', $clienteIds)->get();
         } elseif ($clienteId) {
             $clientes = Cliente::where('id', $clienteId)->get();
         } else {
-            $clientes = Cliente::all();
+            return response()->json([
+                'success' => false,
+                'message' => 'Debes enviar al menos un cliente_id o cliente_ids en la solicitud.',
+            ], 400);
         }
 
         $logsCreados = [];
         $resultados = [];
-        $clientesPayload = [];
+        $procesados = 0;
+        $pendientes = [];
 
         foreach ($clientes as $cliente) {
+            $horaActual = Carbon::now('America/Bogota');
+            if ($horaActual->greaterThanOrEqualTo($horaLimite)) {
+                // Todos los clientes restantes se consideran pendientes
+                $pendientes = $clientes->slice($procesados)->pluck('id')->toArray();
+                break;
+            }
+
             if (empty($cliente->telefono)) {
                 $resultados[] = [
                     'cliente_id' => $cliente->id,
@@ -73,6 +89,7 @@ class MensajeMarivoController extends Controller
                     'status' => 'error',
                     'error' => 'El cliente no tiene un número de teléfono válido.',
                 ];
+                $procesados++;
                 continue;
             }
 
@@ -99,63 +116,31 @@ class MensajeMarivoController extends Controller
 
             $logsCreados[] = $log->id;
 
-            // Construir el payload para cada cliente
-            $payload = [
-                'numero' => '57' . $cliente->telefono,
-                'titulo' => $tituloFinal,
-                'mensaje' => $mensajeFinal,
-            ];
+            try {
+                $payload = [
+                    'numero' => '57' . $cliente->telefono,
+                    'titulo' => $tituloFinal,
+                    'mensaje' => $mensajeFinal,
+                ];
 
-            if ($mensaje->ruta_imagen) {
-                $payload['imagen'] = $mensaje->ruta_imagen;
-            }
-
-            $clientesPayload[] = $payload;
-        }
-
-        try {
-            // Enviar todos los mensajes en un solo request como array "clientes"
-            $response = Http::timeout(1200)->post('http://localhost:3000/send-message', [
-                'clientes' => $clientesPayload
-            ]);
-
-            $responseData = $response->json();
-            foreach ($clientes as $index => $cliente) {
-                $log = LogEnvioMasivo::where('mensaje_masivo_id', $mensaje->id)
-                    ->where('cliente_id', $cliente->id)
-                    ->latest()->first();
-
-                $status = 'error';
-                $error = null;
-                if (isset($responseData['resultados'][$index])) {
-                    // Ajuste: solo valores válidos para estado
-                    $statusNode = $responseData['resultados'][$index]['status'];
-                    if ($statusNode === 'enviado' || $statusNode === 'enviado con imagen') {
-                        $status = 'enviado';
-                    } elseif ($statusNode === 'error') {
-                        $status = 'error';
-                    } else {
-                        $status = $statusNode;
-                    }
-                    $error = $responseData['resultados'][$index]['error'] ?? null;
+                if ($mensaje->ruta_imagen) {
+                    $payload['imagen'] = $mensaje->ruta_imagen;
                 }
 
-                $log->estado = $status;
-                $log->error = $error;
+                \Log::info('Payload enviado a Venom:', $payload);
+
+                $response = Http::timeout(1200)->post('http://localhost:3000/send-message', $payload);
+
+                $log->estado = 'enviado';
                 $log->save();
 
                 $resultados[] = [
                     'cliente_id' => $cliente->id,
                     'numero' => '57' . $cliente->telefono,
-                    'status' => $status,
-                    'error' => $error,
+                    'status' => $log->estado,
+                    'error' => null,
                 ];
-            }
-        } catch (\Exception $e) {
-            foreach ($clientes as $cliente) {
-                $log = LogEnvioMasivo::where('mensaje_masivo_id', $mensaje->id)
-                    ->where('cliente_id', $cliente->id)
-                    ->latest()->first();
+            } catch (\Exception $e) {
                 $log->estado = 'error';
                 $log->error = $e->getMessage();
                 $log->save();
@@ -167,12 +152,17 @@ class MensajeMarivoController extends Controller
                     'error' => $e->getMessage(),
                 ];
             }
+
+            $procesados++;
+            // Delay de 7 segundos entre cada envío
+            sleep(7);
         }
 
         return response()->json([
             'message' => 'Mensajes procesados',
             'logs_creados' => $logsCreados,
             'resultados' => $resultados,
+            'pendientes' => $pendientes,
         ]);
     }
 

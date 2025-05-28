@@ -1,13 +1,13 @@
-2025/05/28-13:52:45.952 7f8 Reusing MANIFEST C:\Users\ACRECER\Desktop\HIBRIDO\HIBRIDO\venom-bot\tokens\session-name\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
-2025/05/28-13:52:45.952 7f8 Recovering log #68
-2025/05/28-13:52:45.965 7f8 Reusing old log C:\Users\ACRECER\Desktop\HIBRIDO\HIBRIDO\venom-bot\tokens\session-name\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/000068.log 
-2025/05/28-13:52:47.344 7f8 Level-0 table #73: started
-2025/05/28-13:52:47.351 7f8 Level-0 table #73: 200593 bytes OK
-2025/05/28-13:52:47.352 7f8 Delete type=0 #68
-2025/05/28-13:52:47.353 7f8 Manual compaction at level-0 from '\x00 \x00\x00\x00' @ 72057594037927935 : 1 .. '\x00!\x00\x00\x00' @ 0 : 0; will stop at (end)
-2025/05/28-13:52:48.801 7f8 Compacting 1@1 + 1@2 files
-2025/05/28-13:52:48.859 7f8 Generated table #74@1: 37013 keys, 1339866 bytes
-2025/05/28-13:52:48.859 7f8 Compacted 1@1 + 1@2 files => 1339866 bytes
-2025/05/28-13:52:48.860 7f8 compacted to: files[ 0 0 1 0 0 0 0 ]
-2025/05/28-13:52:48.861 7f8 Delete type=2 #70
-2025/05/28-13:52:48.861 7f8 Delete type=2 #73
+2025/05/28-16:57:13.396 355c Reusing MANIFEST C:\Users\ACRECER\Desktop\HIBRIDO\HIBRIDO\venom-bot\tokens\session-name\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/05/28-16:57:13.397 355c Recovering log #140
+2025/05/28-16:57:13.407 355c Reusing old log C:\Users\ACRECER\Desktop\HIBRIDO\HIBRIDO\venom-bot\tokens\session-name\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/000140.log 
+2025/05/28-16:57:14.794 71b4 Level-0 table #145: started
+2025/05/28-16:57:14.800 71b4 Level-0 table #145: 166242 bytes OK
+2025/05/28-16:57:14.801 71b4 Delete type=0 #140
+2025/05/28-16:57:14.802 71b4 Manual compaction at level-0 from '\x002\x00\x00\x00' @ 72057594037927935 : 1 .. '\x003\x00\x00\x00' @ 0 : 0; will stop at (end)
+2025/05/28-16:57:16.084 6e0c Compacting 1@1 + 1@2 files
+2025/05/28-16:57:16.152 6e0c Generated table #146@1: 61119 keys, 1927374 bytes
+2025/05/28-16:57:16.152 6e0c Compacted 1@1 + 1@2 files => 1927374 bytes
+2025/05/28-16:57:16.153 6e0c compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/05/28-16:57:16.154 6e0c Delete type=2 #142
+2025/05/28-16:57:16.154 6e0c Delete type=2 #145
