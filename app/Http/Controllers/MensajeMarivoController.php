@@ -47,7 +47,7 @@ class MensajeMarivoController extends Controller
     // Enviar mensaje masivo
     public function enviar($id, Request $request)
     {
-        set_time_limit(0); // Desactivar el límite de tiempo de ejecución
+        set_time_limit(300);
         $mensaje = MensajeMasivo::findOrFail($id);
 
         $clienteId = $request->input('cliente_id');
@@ -61,13 +61,11 @@ class MensajeMarivoController extends Controller
             $clientes = Cliente::all();
         }
 
-        // Mezclar aleatoriamente el orden de los clientes para simular comportamiento humano
-        $clientes = $clientes->shuffle();
-
         $logsCreados = [];
         $resultados = [];
+        $clientesPayload = [];
 
-        foreach ($clientes as $index => $cliente) {
+        foreach ($clientes as $cliente) {
             if (empty($cliente->telefono)) {
                 $resultados[] = [
                     'cliente_id' => $cliente->id,
@@ -101,31 +99,63 @@ class MensajeMarivoController extends Controller
 
             $logsCreados[] = $log->id;
 
-            try {
-                $payload = [
-                    'numero' => '57' . $cliente->telefono,
-                    'titulo' => $tituloFinal,
-                    'mensaje' => $mensajeFinal,
-                ];
+            // Construir el payload para cada cliente
+            $payload = [
+                'numero' => '57' . $cliente->telefono,
+                'titulo' => $tituloFinal,
+                'mensaje' => $mensajeFinal,
+            ];
 
-                if ($mensaje->ruta_imagen) {
-                    $payload['imagen'] = $mensaje->ruta_imagen;
+            if ($mensaje->ruta_imagen) {
+                $payload['imagen'] = $mensaje->ruta_imagen;
+            }
+
+            $clientesPayload[] = $payload;
+        }
+
+        try {
+            // Enviar todos los mensajes en un solo request como array "clientes"
+            $response = Http::timeout(1200)->post('http://localhost:3000/send-message', [
+                'clientes' => $clientesPayload
+            ]);
+
+            $responseData = $response->json();
+            foreach ($clientes as $index => $cliente) {
+                $log = LogEnvioMasivo::where('mensaje_masivo_id', $mensaje->id)
+                    ->where('cliente_id', $cliente->id)
+                    ->latest()->first();
+
+                $status = 'error';
+                $error = null;
+                if (isset($responseData['resultados'][$index])) {
+                    // Ajuste: solo valores válidos para estado
+                    $statusNode = $responseData['resultados'][$index]['status'];
+                    if ($statusNode === 'enviado' || $statusNode === 'enviado con imagen') {
+                        $status = 'enviado';
+                    } elseif ($statusNode === 'error') {
+                        $status = 'error';
+                    } else {
+                        $status = $statusNode;
+                    }
+                    $error = $responseData['resultados'][$index]['error'] ?? null;
                 }
 
-                \Log::info('Payload enviado a Venom:', $payload);
-
-                $response = Http::timeout(21600)->post('http://localhost:3000/send-message', $payload);
-
-                $log->estado = 'enviado';
+                $log->estado = $status;
+                $log->error = $error;
                 $log->save();
 
                 $resultados[] = [
                     'cliente_id' => $cliente->id,
                     'numero' => '57' . $cliente->telefono,
-                    'status' => $log->estado,
-                    'error' => null,
+                    'status' => $status,
+                    'error' => $error,
                 ];
-            } catch (\Exception $e) {
+            }
+        } catch (\Exception $e) {
+            foreach ($clientes as $cliente) {
+                $log = LogEnvioMasivo::where('mensaje_masivo_id', $mensaje->id)
+                    ->where('cliente_id', $cliente->id)
+                    ->latest()->first();
                 $log->estado = 'error';
                 $log->error = $e->getMessage();
                 $log->save();
@@ -136,13 +166,6 @@ class MensajeMarivoController extends Controller
                     'status' => 'error',
                     'error' => $e->getMessage(),
                 ];
-            }
-
-            // Delay aleatorio entre 55 y 130 segundos después de cada envío, excepto el último
-            if ($index < count($clientes) - 1) {
-                $delay = rand(55, 130);
-                \Log::info("Esperando {$delay} segundos antes de enviar el siguiente mensaje...");
-                sleep($delay);
             }
         }
 

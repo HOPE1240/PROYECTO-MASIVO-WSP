@@ -6,29 +6,32 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
-        Schema::create('imagen_mensaje_masivos', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('mensaje_masivo_id');
-            $table->string('ruta');
-            $table->timestamps(); 
-            $table->foreign('mensaje_masivo_id')->references('id')->on('mensaje_masivos')->onDelete('cascade');
+        // Elimina la foreign key y columna area_id, y los campos innecesarios
+        Schema::table('mensaje_masivos', function (Blueprint $table) {
+            if (Schema::hasColumn('mensaje_masivos', 'area_id')) {
+                $table->dropForeign(['area_id']);
+                $table->dropColumn('area_id');
+            }
+            if (Schema::hasColumn('mensaje_masivos', 'variables')) {
+                $table->dropColumn('variables');
+            }
+            if (Schema::hasColumn('mensaje_masivos', 'estado')) {
+                $table->dropColumn('estado');
+            }
+            if (Schema::hasColumn('mensaje_masivos', 'fecha_programada')) {
+                $table->dropColumn('fecha_programada');
+            }
         });
+
+        // Elimina las tablas innecesarias
+        Schema::dropIfExists('areas');
+        Schema::dropIfExists('imagenes');
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        Schema::dropIfExists('imagen_mensaje_masivos');
+        // Aquí puedes agregar el código para revertir los cambios si lo necesitas
     }
 };

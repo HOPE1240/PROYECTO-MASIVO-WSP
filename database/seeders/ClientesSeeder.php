@@ -15,27 +15,25 @@ class ClientesSeeder extends Seeder
      */
     public function run()
     {
+        // Primer cliente real
         DB::table('clientes')->insert([
-            ['nombre' => 'Juan Pérez', 'telefono' => '123456789'],
-            ['nombre' => 'Ana Gómez', 'telefono' => '987654321'],
-            ['nombre' => 'Carlos López', 'telefono' => '456123789'],
-            ['nombre' => 'María Fernández', 'telefono' => '789456123'],
-            ['nombre' => 'Luis Martínez', 'telefono' => '321654987'],
-            ['nombre' => 'Sofía Torres', 'telefono' => '654987321'],
-            ['nombre' => 'Pedro Ramírez', 'telefono' => '987321654'],
-            ['nombre' => 'Laura Sánchez', 'telefono' => '123789456'],
-            ['nombre' => 'Diego Castro', 'telefono' => '456987123'],
-            ['nombre' => 'Valeria Morales', 'telefono' => '789123654'],
-            ['nombre' => 'Jorge Herrera', 'telefono' => '321987654'],
-            ['nombre' => 'Camila Vargas', 'telefono' => '654123987'],
-            ['nombre' => 'Andrés Rojas', 'telefono' => '987654123'],
-            ['nombre' => 'Isabel Gutiérrez', 'telefono' => '123456987'],
-            ['nombre' => 'Ricardo Peña', 'telefono' => '456789321'],
-            ['nombre' => 'Gabriela Ruiz', 'telefono' => '789321456'],
-            ['nombre' => 'Manuel Ortiz', 'telefono' => '321654123'],
-            ['nombre' => 'Daniela Paredes', 'telefono' => '654987456'],
-            ['nombre' => 'Fernando Silva', 'telefono' => '987123789'],
-            ['nombre' => 'Paula Mendoza', 'telefono' => '123789987'],
+            [
+                'nombre' => 'Santiago Garcia Uribe',
+                'telefono' => '3245868817',
+            ]
         ]);
+
+        // 1999 clientes ficticios
+        $clientes = [];
+        for ($i = 2; $i <= 2000; $i++) {
+            $clientes[] = [
+                'nombre' => 'Cliente ' . $i,
+                'telefono' => '300000' . str_pad($i, 4, '0', STR_PAD_LEFT),
+            ];
+        }
+        // Inserta en bloques para eficiencia
+        foreach (array_chunk($clientes, 500) as $chunk) {
+            DB::table('clientes')->insert($chunk);
+        }
     }
 }
