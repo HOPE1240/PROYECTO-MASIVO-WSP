@@ -1,3 +1,2 @@
-2025/05/28-16:57:12.841 355c Reusing MANIFEST C:\Users\ACRECER\Desktop\HIBRIDO\HIBRIDO\venom-bot\tokens\session-name\Default\Sync Data\LevelDB/MANIFEST-000001
-2025/05/28-16:57:12.842 355c Recovering log #3
-2025/05/28-16:57:12.842 355c Reusing old log C:\Users\ACRECER\Desktop\HIBRIDO\HIBRIDO\venom-bot\tokens\session-name\Default\Sync Data\LevelDB/000003.log 
+2025/06/26-14:03:06.360 2f80 Creating DB C:\Users\ACRECER\Desktop\HIBRIDO\HIBRIDO\venom-bot\tokens\session-name\Default\Sync Data\LevelDB since it was missing.
+2025/06/26-14:03:06.406 2f80 Reusing MANIFEST C:\Users\ACRECER\Desktop\HIBRIDO\HIBRIDO\venom-bot\tokens\session-name\Default\Sync Data\LevelDB/MANIFEST-000001

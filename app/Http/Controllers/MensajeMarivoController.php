@@ -45,14 +45,14 @@ class MensajeMarivoController extends Controller
         ], 201);
     }
 
-    // Enviar mensaje masivo uno a uno con delay y validación de hora
+
     public function enviar($id, Request $request)
     {
-        set_time_limit(300);
+        set_time_limit(0);
         $mensaje = MensajeMasivo::findOrFail($id);
 
-        // Hora límite: cámbiala según tu necesidad y zona horaria
-        $horaLimite = Carbon::createFromTime(16, 58, 0, 'America/Bogota');
+        // Hora límite
+        // $horaLimite = Carbon::createFromTime(12, 57, 0, 'America/Bogota');
 
         $clienteId = $request->input('cliente_id');
         $clienteIds = $request->input('cliente_ids');
@@ -75,12 +75,12 @@ class MensajeMarivoController extends Controller
         $pendientes = [];
 
         foreach ($clientes as $cliente) {
-            $horaActual = Carbon::now('America/Bogota');
-            if ($horaActual->greaterThanOrEqualTo($horaLimite)) {
-                // Todos los clientes restantes se consideran pendientes
-                $pendientes = $clientes->slice($procesados)->pluck('id')->toArray();
-                break;
-            }
+            // $horaActual = Carbon::now('America/Bogota');
+            // if ($horaActual->greaterThanOrEqualTo($horaLimite)) {
+            //     // Todos los clientes restantes se consideran pendientes
+            //     $pendientes = $clientes->slice($procesados)->pluck('id')->toArray();
+            //     break;
+            // }
 
             if (empty($cliente->telefono)) {
                 $resultados[] = [
@@ -194,37 +194,4 @@ class MensajeMarivoController extends Controller
         ]);
     }
 
-    // Listar todos los logs con filtros opcionales
-    public function listarLogs(Request $request)
-    {
-        $query = LogEnvioMasivo::query();
-
-        if ($request->has('mensaje_id')) {
-            $query->where('mensaje_masivo_id', $request->input('mensaje_id'));
-        }
-
-        if ($request->has('cliente_id')) {
-            $query->where('cliente_id', $request->input('cliente_id'));
-        }
-
-        if ($request->input('relaciones', 'true') === 'true') {
-            $query->with('mensajeMasivo', 'cliente');
-        }
-
-        return response()->json([
-            'success' => true,
-            'logs' => $query->get(),
-        ]);
-    }
-
-    // Ver log específico por ID
-    public function verLog($id)
-    {
-        $log = LogEnvioMasivo::with('mensajeMasivo', 'cliente')->findOrFail($id);
-
-        return response()->json([
-            'success' => true,
-            'log' => $log,
-        ]);
-    }
 }

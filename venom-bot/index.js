@@ -13,7 +13,7 @@ const isValidNumber = num => /^\d{10,13}$/.test(num);
 
 venom
   .create({
-    session: 'session-name',
+    session: 'produccion',
     multidevice: true,
     headless: true,
     browserArgs: [
@@ -45,8 +45,9 @@ venom
   });
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-const DELAY_MS = 7000;
+const DELAY_MS = 60000;
 
+// Función para descargar imagen en carpeta temp_images
 async function downloadImage(url, outputPath) {
   const writer = fs.createWriteStream(outputPath);
   const response = await axios({
@@ -117,7 +118,12 @@ app.post('/send-message', async (req, res) => {
         console.log(`Enviando a: ${numero}, Imagen: ${imagen ? imagen : 'No hay imagen'}, Título: ${titulo ? titulo : 'No hay título'}`);
 
         if (imagen) {
-          const tempPath = path.join(__dirname, 'temp_img_' + Date.now() + '.jpg');
+          // Crear carpeta temp_images si no existe
+          const tempDir = path.join(__dirname, 'temp_images');
+          if (!fs.existsSync(tempDir)) {
+            fs.mkdirSync(tempDir);
+          }
+          const tempPath = path.join(tempDir, 'temp_img_' + Date.now() + '.jpg');
           await downloadImage(imagen, tempPath);
           await clientVenom.sendImage(`${numero}@c.us`, tempPath, 'imagen.jpg', mensajeAEnviar);
           fs.unlinkSync(tempPath);

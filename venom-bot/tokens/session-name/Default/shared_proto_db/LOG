@@ -1,3 +1,2 @@
-2025/05/28-16:57:12.970 355c Reusing MANIFEST C:\Users\ACRECER\Desktop\HIBRIDO\HIBRIDO\venom-bot\tokens\session-name\Default\shared_proto_db/MANIFEST-000001
-2025/05/28-16:57:12.971 355c Recovering log #3
-2025/05/28-16:57:12.972 355c Reusing old log C:\Users\ACRECER\Desktop\HIBRIDO\HIBRIDO\venom-bot\tokens\session-name\Default\shared_proto_db/000003.log 
+2025/06/26-14:03:06.580 964 Creating DB C:\Users\ACRECER\Desktop\HIBRIDO\HIBRIDO\venom-bot\tokens\session-name\Default\shared_proto_db since it was missing.
+2025/06/26-14:03:06.694 964 Reusing MANIFEST C:\Users\ACRECER\Desktop\HIBRIDO\HIBRIDO\venom-bot\tokens\session-name\Default\shared_proto_db/MANIFEST-000001
